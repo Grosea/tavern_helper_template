@@ -1,0 +1,715 @@
+/* ============================================================
+   废土——机师篇 状态栏 — 废土金属主题
+   ============================================================ */
+
+:root {
+  /* 背景层级 */
+  --c-bg-deep: #0d0d0b;
+  --c-bg-surface: #1a1a14;
+  --c-bg-elevated: #24241c;
+  --c-bg-overlay: #2a2820;
+
+  /* 文字 */
+  --c-text-primary: #c8c0b0;
+  --c-text-muted: #6b6458;
+  --c-text-accent: #d4792a;
+  --c-text-inverse: #1a1a14;
+
+  /* 资源色 */
+  --c-fuel: #c8882a;
+  --c-parts: #4a7a9e;
+  --c-supply: #6b8a3e;
+  --c-armor: #8a7a5e;
+
+  /* 状态色 */
+  --c-danger: #b8302a;
+  --c-warn: #c8961a;
+  --c-ok: #4a7a3a;
+  --c-info: #5a8a9e;
+
+  /* 阶段色 */
+  --c-explore: #4a8a9e;
+  --c-combat: #b8302a;
+  --c-manage: #6b8a3e;
+  --c-negotiate: #8a5a9e;
+  --c-repair: #c8782a;
+
+  /* 边框/分割 */
+  --c-border: #2a2820;
+  --c-border-light: #3a3830;
+  --c-border-active: #d4792a;
+
+  /* 品级色 */
+  --c-tier-t1: #96785a;
+  --c-tier-t2: #5a9ecc;
+  --c-tier-t3: #9b59b6;
+  --c-tier-t4: #d4792a;
+
+  /* 梯度 */
+  --c-aff-0: #6b6458;
+  --c-aff-1: #5a8a9e;
+  --c-aff-2: #6b8a3e;
+  --c-aff-3: #c8882a;
+  --c-aff-4: #d4792a;
+  --c-aff-5: #b8302a;
+
+  /* 字体 */
+  --font-mono: 'JetBrains Mono', 'Cascadia Code', 'Consolas', monospace;
+  --font-ui: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --font-display: 'Segoe UI', system-ui, sans-serif;
+
+  /* 间距/圆角 */
+  --radius-sm: 3px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --gap-xs: 4px;
+  --gap-sm: 6px;
+  --gap-md: 8px;
+  --gap-lg: 12px;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font: 12px/1.4 var(--font-ui);
+  background: var(--c-bg-deep);
+  color: var(--c-text-primary);
+  user-select: none;
+  overflow: hidden;
+}
+
+/* ============================================================
+   Layout
+   ============================================================ */
+
+.status-bar {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background: var(--c-bg-deep);
+}
+
+/* ============================================================
+   Status Strip (fixed top bar)
+   ============================================================ */
+
+.strip {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-lg);
+  padding: 6px 12px;
+  background: var(--c-bg-surface);
+  border-bottom: 1px solid var(--c-border);
+  flex-shrink: 0;
+  /* subtle metal texture via layered gradient */
+  background-image:
+    radial-gradient(ellipse at 20% 50%, rgba(212,121,42,0.03) 0%, transparent 50%),
+    linear-gradient(180deg, rgba(255,255,255,0.01) 0%, transparent 100%);
+}
+
+.strip-item {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-xs);
+  font-size: 11px;
+}
+
+.strip-label {
+  color: var(--c-text-muted);
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.strip-val {
+  font-weight: 600;
+  font-family: var(--font-mono);
+  font-size: 11px;
+}
+
+.strip-bar {
+  width: 56px;
+  height: 6px;
+  background: var(--c-bg-deep);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  position: relative;
+}
+
+.strip-bar::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    90deg,
+    transparent,
+    transparent 3px,
+    rgba(0,0,0,0.15) 3px,
+    rgba(0,0,0,0.15) 4px
+  );
+  pointer-events: none;
+}
+
+.strip-bar-inner {
+  height: 100%;
+  border-radius: var(--radius-sm);
+  transition: width 0.4s ease;
+  /* torn metal edge */
+  clip-path: polygon(
+    0 0,
+    calc(100% - 2px) 0,
+    100% 20%,
+    calc(100% - 1px) 40%,
+    100% 60%,
+    calc(100% - 2px) 80%,
+    100% 100%,
+    0 100%
+  );
+}
+
+.strip-bar-inner.fuel  { background: linear-gradient(90deg, #a07020, var(--c-fuel)); }
+.strip-bar-inner.parts { background: linear-gradient(90deg, #3a6a8a, var(--c-parts)); }
+.strip-bar-inner.supply{ background: linear-gradient(90deg, #5a7a30, var(--c-supply)); }
+.strip-bar-inner.armor { background: linear-gradient(90deg, #7a6a4e, var(--c-armor)); }
+
+.strip-sep {
+  width: 1px;
+  height: 20px;
+  background: var(--c-border-light);
+}
+
+.strip-phase {
+  display: inline-block;
+  padding: 1px 8px;
+  border-radius: 10px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.strip-phase.explore   { background: rgba(74,138,158,0.2); color: var(--c-explore); }
+.strip-phase.combat    { background: rgba(184,48,42,0.2); color: var(--c-combat); }
+.strip-phase.manage    { background: rgba(107,138,62,0.2); color: var(--c-manage); }
+.strip-phase.negotiate { background: rgba(138,90,158,0.2); color: var(--c-negotiate); }
+.strip-phase.repair    { background: rgba(200,120,42,0.2); color: var(--c-repair); }
+
+.strip-move {
+  font-size: 12px;
+  margin-left: -4px;
+  width: 16px;
+  text-align: center;
+}
+
+/* Crisis pulse animation */
+@keyframes crisis-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.strip-crisis {
+  animation: crisis-pulse 1.2s ease-in-out infinite;
+}
+
+/* Disaster warning animation */
+@keyframes disaster-flash {
+  0%, 100% { background: rgba(184,48,42,0.15); }
+  50% { background: rgba(184,48,42,0.35); }
+}
+
+.disaster-active {
+  animation: disaster-flash 2s ease-in-out infinite;
+  border-radius: 8px;
+  padding: 1px 6px;
+}
+
+/* ============================================================
+   Combat Overlay
+   ============================================================ */
+
+.combat-overlay {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-lg);
+  padding: 5px 12px;
+  background: linear-gradient(90deg, rgba(184,48,42,0.18), rgba(184,48,42,0.08));
+  border-bottom: 1px solid rgba(184,48,42,0.25);
+  flex-shrink: 0;
+  font-size: 11px;
+}
+
+.combat-overlay-label {
+  color: var(--c-combat);
+  font-weight: 700;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.combat-overlay-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.combat-overlay-key {
+  color: rgba(184,48,42,0.7);
+  font-size: 9px;
+  text-transform: uppercase;
+}
+
+.combat-overlay-val {
+  font-weight: 600;
+  font-family: var(--font-mono);
+}
+
+/* ============================================================
+   Tab Bar
+   ============================================================ */
+
+.tabs {
+  display: flex;
+  gap: 0;
+  padding: 0 12px;
+  background: var(--c-bg-deep);
+  border-bottom: 1px solid var(--c-border);
+  flex-shrink: 0;
+  overflow-x: auto;
+}
+
+.tabs::-webkit-scrollbar { height: 0; }
+
+.tab {
+  padding: 6px 14px;
+  cursor: pointer;
+  color: var(--c-text-muted);
+  border-bottom: 2px solid transparent;
+  font-size: 11px;
+  white-space: nowrap;
+  transition: color 0.15s, border-color 0.15s;
+  background: none;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  font-family: var(--font-ui);
+}
+
+.tab:hover {
+  color: var(--c-text-primary);
+}
+
+.tab.active {
+  color: var(--c-text-accent);
+  border-bottom-color: var(--c-text-accent);
+}
+
+.tab-badge {
+  font-size: 9px;
+  background: var(--c-text-accent);
+  color: var(--c-text-inverse);
+  padding: 1px 5px;
+  border-radius: 8px;
+  margin-left: 4px;
+  font-weight: 600;
+}
+
+/* ============================================================
+   Content Area
+   ============================================================ */
+
+.content {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--gap-md) var(--gap-lg);
+}
+
+.content::-webkit-scrollbar {
+  width: 5px;
+}
+
+.content::-webkit-scrollbar-track {
+  background: var(--c-bg-deep);
+}
+
+.content::-webkit-scrollbar-thumb {
+  background: var(--c-border-light);
+  border-radius: var(--radius-sm);
+}
+
+.page {
+  display: none;
+}
+
+.page.active {
+  display: block;
+}
+
+/* ============================================================
+   Cards
+   ============================================================ */
+
+.card {
+  background: var(--c-bg-surface);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--gap-md);
+  overflow: hidden;
+  /* rivet decoration on upper-left */
+  position: relative;
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  width: 5px;
+  height: 5px;
+  background: var(--c-border-light);
+  border-radius: 50%;
+  box-shadow:
+    0 0 0 1px rgba(0,0,0,0.3),
+    inset 0 1px 0 rgba(255,255,255,0.05);
+}
+
+.card-header {
+  padding: 6px 10px 6px 16px;
+  background: rgba(255,255,255,0.02);
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--c-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border-bottom: 1px solid var(--c-border);
+}
+
+.card-body {
+  padding: var(--gap-md) 10px;
+}
+
+/* ============================================================
+   Grids
+   ============================================================ */
+
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: var(--gap-sm); }
+.grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: var(--gap-sm); }
+.grid4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: var(--gap-sm); }
+
+/* ============================================================
+   Row (label: value)
+   ============================================================ */
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 3px 0;
+  font-size: 11px;
+}
+
+.row + .row {
+  border-top: 1px solid rgba(255,255,255,0.02);
+}
+
+.row-label {
+  color: var(--c-text-muted);
+  font-size: 10px;
+}
+
+.row-val {
+  font-weight: 500;
+  text-align: right;
+  font-family: var(--font-mono);
+  font-size: 11px;
+}
+
+.row-val.fuel-c   { color: var(--c-fuel); }
+.row-val.parts-c  { color: var(--c-parts); }
+.row-val.supply-c { color: var(--c-supply); }
+.row-val.armor-c  { color: var(--c-armor); }
+.row-val.danger   { color: var(--c-danger); }
+.row-val.warn     { color: var(--c-warn); }
+.row-val.ok       { color: var(--c-ok); }
+.row-val.accent   { color: var(--c-text-accent); }
+
+/* ============================================================
+   Resource Bars
+   ============================================================ */
+
+.res-bar {
+  width: 80px;
+  height: 6px;
+  background: var(--c-bg-deep);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.res-bar-inner {
+  height: 100%;
+  border-radius: var(--radius-sm);
+  transition: width 0.4s ease;
+}
+
+.res-bar-inner.fuel  { background: var(--c-fuel); }
+.res-bar-inner.parts { background: var(--c-parts); }
+.res-bar-inner.supply{ background: var(--c-supply); }
+.res-bar-inner.armor { background: var(--c-armor); }
+
+/* ============================================================
+   Affection bar
+   ============================================================ */
+
+.aff-bar {
+  width: 80px;
+  height: 4px;
+  background: var(--c-bg-deep);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.aff-bar-inner {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.3s;
+}
+
+/* ============================================================
+   Faction attitude bar
+   ============================================================ */
+
+.faction-bar {
+  width: 100%;
+  height: 8px;
+  background: linear-gradient(90deg, #b8302a 0%, #b8302a 33%, var(--c-bg-deep) 33%, var(--c-bg-deep) 66%, #4a8a3e 66%, #4a8a3e 100%);
+  border-radius: 4px;
+  position: relative;
+  margin-top: 2px;
+}
+
+.faction-bar-marker {
+  position: absolute;
+  top: -2px;
+  width: 4px;
+  height: 12px;
+  background: var(--c-text-primary);
+  border-radius: 2px;
+  transform: translateX(-50%);
+  transition: left 0.4s ease;
+}
+
+/* ============================================================
+   Mecha Girl card
+   ============================================================ */
+
+.girl-card {
+  display: flex;
+  gap: var(--gap-md);
+  padding: 6px 8px;
+  align-items: center;
+  border-bottom: 1px solid rgba(255,255,255,0.02);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.girl-card:last-child { border-bottom: none; }
+
+.girl-card:hover { background: rgba(255,255,255,0.02); }
+
+.girl-avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: var(--radius-sm);
+  background: var(--c-bg-overlay);
+  border: 1px solid var(--c-border-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.girl-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.girl-name {
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.girl-type {
+  font-size: 9px;
+  color: var(--c-text-muted);
+}
+
+.girl-stats {
+  display: flex;
+  gap: var(--gap-md);
+  font-size: 9px;
+  flex-shrink: 0;
+}
+
+.girl-stat { color: var(--c-text-muted); }
+.girl-stat.on-mission { color: var(--c-text-accent); font-weight: 600; }
+.girl-stat.in-base { color: var(--c-ok); }
+.girl-stat.repairing { color: var(--c-warn); }
+
+/* Girl detail (expanded) */
+.girl-detail {
+  padding: var(--gap-md);
+  background: var(--c-bg-elevated);
+  border-top: 1px solid var(--c-border);
+}
+
+.girl-detail-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--gap-sm);
+}
+
+/* ============================================================
+   Inventory table
+   ============================================================ */
+
+.inv-table {
+  width: 100%;
+  font-size: 10px;
+  border-collapse: collapse;
+}
+
+.inv-table th {
+  text-align: left;
+  color: var(--c-text-muted);
+  font-weight: 500;
+  padding: 3px 4px;
+  border-bottom: 1px solid var(--c-border);
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.inv-table td {
+  padding: 3px 4px;
+  border-bottom: 1px solid rgba(255,255,255,0.015);
+  font-family: var(--font-mono);
+  font-size: 10px;
+}
+
+.inv-tier {
+  display: inline-block;
+  padding: 0 4px;
+  border-radius: var(--radius-sm);
+  font-size: 8px;
+  font-weight: 600;
+  font-family: var(--font-ui);
+}
+
+.inv-tier.t1 { background: rgba(150,120,90,0.25); color: var(--c-tier-t1); }
+.inv-tier.t2 { background: rgba(90,158,204,0.25); color: var(--c-tier-t2); }
+.inv-tier.t3 { background: rgba(155,89,182,0.25); color: var(--c-tier-t3); }
+.inv-tier.t4 { background: rgba(212,121,42,0.25); color: var(--c-tier-t4); }
+
+/* ============================================================
+   Quest
+   ============================================================ */
+
+.quest {
+  padding: 6px 8px;
+  border-left: 2px solid var(--c-border);
+  margin-bottom: 4px;
+  background: var(--c-bg-surface);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
+
+.quest.main { border-left-color: var(--c-text-accent); }
+
+.quest-title { font-size: 11px; font-weight: 500; }
+
+.quest-meta {
+  font-size: 9px;
+  color: var(--c-text-muted);
+  margin-top: 2px;
+}
+
+/* ============================================================
+   Empty state
+   ============================================================ */
+
+.empty {
+  color: var(--c-text-muted);
+  font-size: 11px;
+  text-align: center;
+  padding: 16px;
+  font-style: italic;
+}
+
+/* ============================================================
+   Tag / Badge
+   ============================================================ */
+
+.tag {
+  display: inline-block;
+  padding: 1px 6px;
+  border-radius: 8px;
+  font-size: 9px;
+  font-weight: 600;
+}
+
+.tag-outline {
+  background: transparent;
+  border: 1px solid var(--c-border-light);
+}
+
+/* ============================================================
+   Misc
+   ============================================================ */
+
+.ma { margin: auto; }
+.text-muted { color: var(--c-text-muted); }
+.text-accent { color: var(--c-text-accent); }
+.text-sm { font-size: 10px; }
+.text-xs { font-size: 9px; }
+
+/* Achievement badge */
+.achievement {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  background: var(--c-bg-elevated);
+  border: 1px solid var(--c-border-light);
+  border-radius: var(--radius-lg);
+  font-size: 10px;
+}
+
+/* NPC row */
+.npc-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 0;
+  font-size: 11px;
+  border-bottom: 1px solid rgba(255,255,255,0.015);
+}
+
+.npc-name { font-weight: 500; }
+.npc-faction { font-size: 9px; color: var(--c-text-muted); }
+.npc-location { font-size: 9px; color: var(--c-text-muted); font-family: var(--font-mono); }
+
+/* Event log item */
+.event-log-item {
+  padding: 4px 0;
+  font-size: 10px;
+  border-bottom: 1px solid rgba(255,255,255,0.015);
+  color: var(--c-text-muted);
+}
+
+.event-log-item::before {
+  content: '▸ ';
+  color: var(--c-text-accent);
+  font-size: 8px;
+}

@@ -1,0 +1,954 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "系统": {
+      "type": "object",
+      "properties": {
+        "日期": {
+          "default": "复苏100年/01/01",
+          "type": "string"
+        },
+        "时间": {
+          "default": "06:00",
+          "type": "string"
+        },
+        "当前位置": {
+          "default": "起始荒原",
+          "type": "string"
+        },
+        "当前阶段": {
+          "default": "探索",
+          "type": "string",
+          "enum": [
+            "探索",
+            "战斗",
+            "经营",
+            "交涉",
+            "修复"
+          ]
+        },
+        "移动状态": {
+          "default": "驻留",
+          "type": "string",
+          "enum": [
+            "驻留",
+            "航程中",
+            "全速航行"
+          ]
+        },
+        "灾害预警": {
+          "default": "无",
+          "type": "string",
+          "enum": [
+            "无",
+            "孢子潮汐",
+            "地壳碎裂",
+            "酸雨前锋",
+            "沙暴",
+            "暴风雪"
+          ]
+        },
+        "当前天气": {
+          "default": "阴",
+          "type": "string",
+          "enum": [
+            "晴",
+            "阴",
+            "酸雨",
+            "孢子雾",
+            "铁锈风",
+            "电磁风暴",
+            "辐射尘",
+            "地热蒸汽",
+            "冰雾",
+            "静滞低压"
+          ]
+        },
+        "季节": {
+          "default": "旱季",
+          "type": "string",
+          "enum": [
+            "旱季",
+            "雨季",
+            "寒季",
+            "风季"
+          ]
+        },
+        "危机等级": {
+          "type": "number"
+        },
+        "危机计数器": {
+          "type": "number"
+        },
+        "当前温度": {
+          "type": "number"
+        },
+        "舱内温度": {
+          "type": "number"
+        },
+        "已行驶里程": {
+          "type": "number"
+        },
+        "已发现区域": {
+          "default": [],
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "近期事务": {
+          "default": [],
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "已解锁成就": {
+          "default": [],
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "任务列表": {
+          "default": {},
+          "type": "object",
+          "propertyNames": {
+            "type": "string"
+          },
+          "additionalProperties": {
+            "default": {},
+            "type": "object",
+            "properties": {
+              "类型": {
+                "default": "支线",
+                "type": "string",
+                "enum": [
+                  "主线",
+                  "支线"
+                ]
+              },
+              "目标": {
+                "default": "",
+                "type": "string"
+              },
+              "奖励": {
+                "default": "",
+                "type": "string"
+              },
+              "状态": {
+                "default": "进行中",
+                "type": "string",
+                "enum": [
+                  "进行中",
+                  "已完成",
+                  "失败"
+                ]
+              },
+              "期限": {
+                "default": "无",
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "当前战斗": {
+      "default": {},
+      "type": "object",
+      "properties": {
+        "距离": {
+          "default": "中距",
+          "type": "string",
+          "enum": [
+            "接触",
+            "近距",
+            "中距",
+            "远距",
+            "超远距"
+          ]
+        },
+        "敌方类型": {
+          "default": "机械",
+          "type": "string",
+          "enum": [
+            "机械",
+            "变异兽",
+            "植物真菌",
+            "能量体",
+            "人类",
+            "混合"
+          ]
+        },
+        "敌方规模": {
+          "default": "",
+          "type": "string"
+        },
+        "敌方状态": {
+          "default": "",
+          "type": "string"
+        },
+        "遭遇预警": {
+          "default": "标准预警",
+          "type": "string",
+          "enum": [
+            "无预警",
+            "短预警",
+            "标准预警"
+          ]
+        }
+      }
+    },
+    "基地": {
+      "type": "object",
+      "properties": {
+        "燃料": {
+          "type": "number"
+        },
+        "基地装甲": {
+          "type": "number"
+        },
+        "零件": {
+          "type": "number"
+        },
+        "物资": {
+          "type": "number"
+        },
+        "底盘等级": {
+          "default": "T1机动避难所",
+          "type": "string",
+          "enum": [
+            "T1机动避难所",
+            "T2小型基地",
+            "T3中型基地",
+            "T4大型基地",
+            "T5终极堡垒"
+          ]
+        },
+        "总空间": {
+          "default": 20,
+          "type": "number"
+        },
+        "已用空间": {
+          "default": 20,
+          "type": "number"
+        },
+        "外观": {
+          "default": "",
+          "type": "string"
+        },
+        "内饰": {
+          "default": "",
+          "type": "string"
+        },
+        "引擎": {
+          "default": [],
+          "type": "array",
+          "items": {
+            "default": {},
+            "type": "object",
+            "properties": {
+              "名称": {
+                "type": "string"
+              },
+              "等级": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "名称",
+              "等级"
+            ]
+          }
+        },
+        "模块": {
+          "default": {},
+          "type": "object",
+          "propertyNames": {
+            "type": "string"
+          },
+          "additionalProperties": {
+            "default": {},
+            "type": "object",
+            "properties": {
+              "类别": {
+                "type": "string"
+              },
+              "等级": {
+                "type": "string"
+              },
+              "空间": {
+                "type": "number"
+              },
+              "状态": {
+                "default": "正常",
+                "type": "string"
+              },
+              "来源": {
+                "default": "初始",
+                "type": "string"
+              }
+            },
+            "required": [
+              "类别",
+              "等级",
+              "空间"
+            ]
+          }
+        },
+        "物品栏": {
+          "default": {},
+          "type": "object",
+          "propertyNames": {
+            "type": "string"
+          },
+          "additionalProperties": {
+            "default": {},
+            "type": "object",
+            "properties": {
+              "品级": {
+                "default": "T1",
+                "type": "string"
+              },
+              "数量": {
+                "default": 0,
+                "type": "number"
+              },
+              "单件重量": {
+                "default": 0,
+                "type": "number"
+              },
+              "来源": {
+                "default": "",
+                "type": "string"
+              },
+              "描述": {
+                "default": "",
+                "type": "string"
+              }
+            }
+          }
+        },
+        "已用负重": {
+          "default": 0,
+          "type": "number"
+        }
+      }
+    },
+    "多恩": {
+      "type": "object",
+      "properties": {
+        "武力": {
+          "type": "number"
+        },
+        "工程": {
+          "type": "number"
+        },
+        "感知": {
+          "type": "number"
+        },
+        "统御": {
+          "type": "number"
+        },
+        "天赋": {
+          "default": [],
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "装备": {
+          "default": {},
+          "type": "object",
+          "properties": {
+            "主武器": {
+              "default": "无",
+              "type": "string"
+            },
+            "副武器": {
+              "default": "无",
+              "type": "string"
+            },
+            "护甲": {
+              "default": "无",
+              "type": "string"
+            },
+            "工具槽": {
+              "default": "无",
+              "type": "string"
+            }
+          }
+        },
+        "背包": {
+          "default": {},
+          "type": "object",
+          "propertyNames": {
+            "type": "string"
+          },
+          "additionalProperties": {
+            "default": {},
+            "type": "object",
+            "properties": {
+              "品级": {
+                "default": "T1",
+                "type": "string"
+              },
+              "数量": {
+                "default": 0,
+                "type": "number"
+              },
+              "单件重量": {
+                "default": 0,
+                "type": "number"
+              },
+              "来源": {
+                "default": "",
+                "type": "string"
+              },
+              "描述": {
+                "default": "",
+                "type": "string"
+              }
+            }
+          }
+        },
+        "已用负重": {
+          "default": 0,
+          "type": "number"
+        }
+      }
+    },
+    "机甲": {
+      "type": "object",
+      "properties": {
+        "名称": {
+          "default": "MC-00 荒狼",
+          "type": "string"
+        },
+        "核心": {
+          "default": {},
+          "type": "object",
+          "properties": {
+            "材料": {
+              "default": "军标",
+              "type": "string",
+              "enum": [
+                "废铁",
+                "军标",
+                "合金",
+                "遗产"
+              ]
+            },
+            "体积": {
+              "default": 18,
+              "type": "number"
+            },
+            "自重": {
+              "default": 6,
+              "type": "number"
+            },
+            "电力": {
+              "default": 20,
+              "type": "number"
+            },
+            "描述": {
+              "default": "",
+              "type": "string"
+            }
+          }
+        },
+        "右臂": {
+          "default": {},
+          "type": "object",
+          "properties": {
+            "材料": {
+              "default": "军标",
+              "type": "string",
+              "enum": [
+                "废铁",
+                "军标",
+                "合金",
+                "遗产"
+              ]
+            },
+            "体积": {
+              "default": 4,
+              "type": "number"
+            },
+            "自重": {
+              "default": 4,
+              "type": "number"
+            },
+            "可挂武器": {
+              "default": "轻型+中型",
+              "type": "string"
+            },
+            "描述": {
+              "default": "",
+              "type": "string"
+            }
+          }
+        },
+        "左臂": {
+          "default": {},
+          "type": "object",
+          "properties": {
+            "材料": {
+              "default": "废铁",
+              "type": "string",
+              "enum": [
+                "废铁",
+                "军标",
+                "合金",
+                "遗产"
+              ]
+            },
+            "体积": {
+              "default": 3,
+              "type": "number"
+            },
+            "自重": {
+              "default": 3,
+              "type": "number"
+            },
+            "可挂武器": {
+              "default": "仅轻型",
+              "type": "string"
+            },
+            "描述": {
+              "default": "",
+              "type": "string"
+            }
+          }
+        },
+        "腿部": {
+          "default": {},
+          "type": "object",
+          "properties": {
+            "材料": {
+              "default": "军标",
+              "type": "string",
+              "enum": [
+                "废铁",
+                "军标",
+                "合金",
+                "遗产"
+              ]
+            },
+            "形态": {
+              "default": "二足",
+              "type": "string",
+              "enum": [
+                "二足",
+                "逆关节",
+                "四足",
+                "履带"
+              ]
+            },
+            "体积": {
+              "default": 5,
+              "type": "number"
+            },
+            "自重": {
+              "default": 6,
+              "type": "number"
+            },
+            "载重": {
+              "default": 25,
+              "type": "number"
+            },
+            "描述": {
+              "default": "",
+              "type": "string"
+            }
+          }
+        },
+        "头部": {
+          "default": {},
+          "type": "object",
+          "properties": {
+            "材料": {
+              "default": "废铁",
+              "type": "string",
+              "enum": [
+                "废铁",
+                "军标",
+                "合金",
+                "遗产"
+              ]
+            },
+            "体积": {
+              "default": 1,
+              "type": "number"
+            },
+            "自重": {
+              "default": 1,
+              "type": "number"
+            },
+            "电力消耗": {
+              "default": 1,
+              "type": "number"
+            },
+            "描述": {
+              "default": "",
+              "type": "string"
+            }
+          }
+        },
+        "武器配置": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "硬点": {
+                "type": "string"
+              },
+              "武器": {
+                "type": "string"
+              },
+              "弹种": {
+                "type": "string"
+              },
+              "备弹": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "硬点",
+              "武器",
+              "弹种"
+            ]
+          }
+        },
+        "外观": {
+          "default": "",
+          "type": "string"
+        },
+        "同乘机娘": {
+          "default": "",
+          "type": "string"
+        },
+        "击毁数": {
+          "type": "number"
+        }
+      }
+    },
+    "载具": {
+      "type": "object",
+      "propertyNames": {
+        "type": "string"
+      },
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "底盘": {
+            "default": "无",
+            "type": "string"
+          },
+          "引擎": {
+            "default": "无",
+            "type": "string"
+          },
+          "武器": {
+            "default": [],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "耐久": {
+            "type": "number"
+          },
+          "状态": {
+            "default": "待命",
+            "type": "string"
+          },
+          "货物": {
+            "default": {},
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {
+              "default": {},
+              "type": "object",
+              "properties": {
+                "品级": {
+                  "default": "T1",
+                  "type": "string"
+                },
+                "数量": {
+                  "default": 0,
+                  "type": "number"
+                },
+                "单件重量": {
+                  "default": 0,
+                  "type": "number"
+                },
+                "来源": {
+                  "default": "",
+                  "type": "string"
+                },
+                "描述": {
+                  "default": "",
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "已用负重": {
+            "default": 0,
+            "type": "number"
+          }
+        }
+      }
+    },
+    "机娘关系网": {
+      "type": "object",
+      "propertyNames": {
+        "type": "string"
+      },
+      "additionalProperties": {
+        "type": "number"
+      }
+    },
+    "势力态度": {
+      "type": "object",
+      "propertyNames": {
+        "type": "string"
+      },
+      "additionalProperties": {
+        "type": "number"
+      }
+    },
+    "势力事件日志": {
+      "default": [],
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "NPC名录": {
+      "default": {},
+      "type": "object",
+      "propertyNames": {
+        "type": "string"
+      },
+      "additionalProperties": {
+        "default": {},
+        "type": "object",
+        "properties": {
+          "身份": {
+            "default": "",
+            "type": "string"
+          },
+          "所属势力": {
+            "default": "",
+            "type": "string"
+          },
+          "当前位置": {
+            "default": "",
+            "type": "string"
+          },
+          "状态": {
+            "default": "活跃",
+            "type": "string"
+          },
+          "备注": {
+            "default": "",
+            "type": "string"
+          }
+        }
+      }
+    },
+    "机娘名册": {
+      "type": "object",
+      "propertyNames": {
+        "type": "string"
+      },
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "类型": {
+            "default": "战斗型",
+            "type": "string",
+            "enum": [
+              "战斗型",
+              "工程型",
+              "侦察型",
+              "支援型",
+              "重火型"
+            ]
+          },
+          "副标签": {
+            "default": {},
+            "type": "object",
+            "properties": {
+              "气质": {
+                "default": "",
+                "type": "string"
+              },
+              "社交": {
+                "default": "",
+                "type": "string"
+              },
+              "情感表达": {
+                "default": "",
+                "type": "string"
+              },
+              "价值观": {
+                "default": "",
+                "type": "string"
+              }
+            }
+          },
+          "背景": {
+            "default": "",
+            "type": "string"
+          },
+          "好感度": {
+            "type": "number"
+          },
+          "好感阶段": {
+            "default": "初识",
+            "type": "string",
+            "enum": [
+              "初识",
+              "熟悉",
+              "暧昧",
+              "恋人",
+              "深爱"
+            ]
+          },
+          "已触发亲密事件": {
+            "default": [],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "亲密次数": {
+            "type": "number"
+          },
+          "上次亲密": {
+            "default": "",
+            "type": "string"
+          },
+          "身形描述": {
+            "default": "",
+            "type": "string"
+          },
+          "XP": {
+            "default": [],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "天赋": {
+            "default": [],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "装甲值": {
+            "type": "number"
+          },
+          "零件耐久": {
+            "type": "number"
+          },
+          "状态": {
+            "default": "待命",
+            "type": "string"
+          },
+          "位置": {
+            "default": "基地内",
+            "type": "string"
+          },
+          "出战": {
+            "default": false,
+            "type": "boolean"
+          },
+          "装备": {
+            "default": {},
+            "type": "object",
+            "properties": {
+              "主武器": {
+                "default": "无",
+                "type": "string"
+              },
+              "副武器": {
+                "default": "无",
+                "type": "string"
+              },
+              "护甲": {
+                "default": "无",
+                "type": "string"
+              },
+              "工具槽": {
+                "default": "无",
+                "type": "string"
+              }
+            }
+          },
+          "僚机": {
+            "type": "object",
+            "properties": {
+              "名称": {
+                "default": "",
+                "type": "string"
+              },
+              "骨架": {
+                "default": "",
+                "type": "string"
+              },
+              "引擎": {
+                "default": "",
+                "type": "string"
+              },
+              "底盘": {
+                "default": "",
+                "type": "string"
+              },
+              "装甲方案": {
+                "default": "",
+                "type": "string"
+              },
+              "武器配置": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "硬点": {
+                      "type": "string"
+                    },
+                    "武器": {
+                      "type": "string"
+                    },
+                    "弹种": {
+                      "type": "string"
+                    },
+                    "备弹": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "硬点",
+                    "武器",
+                    "弹种"
+                  ]
+                }
+              },
+              "击毁数": {
+                "type": "number"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
