@@ -13,9 +13,9 @@ export const Schema = z.object({
     当前温度: z.coerce.number().transform(v => _.clamp(v, -60, 80)).default(14),
     舱内温度: z.coerce.number().transform(v => _.clamp(v, 0, 45)).default(22),
     已行驶里程: z.coerce.number().transform(v => _.clamp(v, 0, 999999)).default(0),
-    已发现区域: z.array(z.string()).default([]),
-    近期事务: z.array(z.string()).default([]),
-    已解锁成就: z.array(z.string()).default([]),
+    已发现区域: z.array(z.string()).default([]).transform(v => [...v]),
+    近期事务: z.array(z.string()).default([]).transform(v => [...v]),
+    已解锁成就: z.array(z.string()).default([]).transform(v => [...v]),
     任务列表: z.record(z.string(), z.object({
       类型: z.enum(['主线', '支线']).default('支线'),
       目标: z.string().default(''),
@@ -46,7 +46,7 @@ export const Schema = z.object({
     引擎: z.array(z.object({
       名称: z.string(),
       等级: z.string(),
-    }).default({})).default([]),
+    }).default({})).default([]).transform(v => [...v]),
     模块: z.record(z.string(), z.object({
       类别: z.string(),
       等级: z.string(),
@@ -69,7 +69,7 @@ export const Schema = z.object({
     工程: z.coerce.number().transform(v => _.clamp(v, 1, 10)).default(6),
     感知: z.coerce.number().transform(v => _.clamp(v, 1, 10)).default(6),
     统御: z.coerce.number().transform(v => _.clamp(v, 1, 10)).default(6),
-    天赋: z.array(z.string()).default([]),
+    天赋: z.array(z.string()).default([]).transform(v => [...v]),
     装备: z.object({
       主武器: z.string().default('无'),
       副武器: z.string().default('无'),
@@ -129,7 +129,7 @@ export const Schema = z.object({
       武器: z.string(),
       弹种: z.string(),
       备弹: z.coerce.number().transform(v => _.clamp(v, 0, 999)).default(0),
-    }).default({})).default([]),
+    }).default({})).default([]).transform(v => [...v]),
     外观: z.string().default(''),
     同乘机娘: z.string().default(''),
     击毁数: z.coerce.number().transform(v => _.clamp(v, 0, 9999)).default(0),
@@ -138,7 +138,7 @@ export const Schema = z.object({
   载具: z.record(z.string(), z.object({
     底盘: z.string().default('无'),
     引擎: z.string().default('无'),
-    武器: z.array(z.string()).default([]),
+    武器: z.array(z.string()).default([]).transform(v => [...v]),
     耐久: z.coerce.number().transform(v => _.clamp(v, 0, 100)).default(100),
     状态: z.string().default('待命'),
     货物: z.record(z.string(), z.object({
@@ -154,7 +154,7 @@ export const Schema = z.object({
   机娘关系网: z.record(z.string(), z.coerce.number().transform(v => _.clamp(v, -50, 50))).default({}),
 
   势力态度: z.record(z.string(), z.coerce.number().transform(v => _.clamp(v, -100, 100))).default({}),
-  势力事件日志: z.array(z.string()).default([]),
+  势力事件日志: z.array(z.string()).default([]).transform(v => [...v]),
 
   NPC名录: z.record(z.string(), z.object({
     身份: z.string().default(''),
@@ -176,13 +176,13 @@ export const Schema = z.object({
     好感度: z.coerce.number().transform(v => _.clamp(v, 0, 100)).default(0),
     好感阶段: z.enum(['初识', '熟悉', '暧昧', '恋人', '深爱']).default('初识'),
     // NSFW追踪 — 防止事件重复，校准亲密自然度
-    已触发亲密事件: z.array(z.string()).default([]),
+    已触发亲密事件: z.array(z.string()).default([]).transform(v => [...v]),
     亲密次数: z.coerce.number().transform(v => _.clamp(v, 0, 999)).default(0),
     上次亲密: z.string().default(''),  // 日期时间字符串
     // 身体与XP — 激活时写入，后续可随好感解锁新XP
     身形描述: z.string().default(''),  // 激活时从用户描述生成(e.g. '纤细但肌肉线条紧致，胸部匀称，腰窄臀圆')
-    XP: z.array(z.string()).default([]),  // 性偏好，激活时由副标签+背景推测1-2个，好感提高可追加
-    天赋: z.array(z.string()).default([]),
+    XP: z.array(z.string()).default([]).transform(v => [...v]),  // 性偏好，激活时由副标签+背景推测1-2个，好感提高可追加
+    天赋: z.array(z.string()).default([]).transform(v => [...v]),
     装甲值: z.coerce.number().transform(v => _.clamp(v, 0, 100)).default(100),
     零件耐久: z.coerce.number().transform(v => _.clamp(v, 0, 100)).default(100),
     状态: z.string().default('待命'),
@@ -206,7 +206,7 @@ export const Schema = z.object({
         武器: z.string(),
         弹种: z.string(),
         备弹: z.coerce.number().transform(v => _.clamp(v, 0, 999)).default(0),
-      }).default({})).default([]),
+      }).default({})).default([]).transform(v => [...v]),
       击毁数: z.coerce.number().transform(v => _.clamp(v, 0, 9999)).default(0),
     }).default({}),
   }).default({})).default({}),
